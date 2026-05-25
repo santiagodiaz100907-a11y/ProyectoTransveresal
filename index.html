@@ -892,17 +892,16 @@
     align-items: center;
     justify-content: center;
     gap: 1.5rem;
-    cursor: pointer;
     position: absolute;
     inset: 0;
     overflow: hidden;
-    transition: opacity 0.4s ease, background 0.3s;
+    transition: opacity 0.4s ease;
     z-index: 2;
+    pointer-events: none;
   }
 
   .video-placeholder.is-hidden {
     opacity: 0;
-    pointer-events: none;
   }
 
   .video-placeholder::before {
@@ -1974,11 +1973,12 @@
 
       <div class="video-wrapper">
         <div class="video-frame">
-          <video id="videoPlayer" class="video-real" preload="metadata" playsinline>
+          <video id="videoPlayer" class="video-real" controls preload="metadata" playsinline>
             <source src="origen-del-pensamiento.mp4" type="video/mp4">
             Tu navegador no soporta la reproducción de video HTML5.
+            <a href="origen-del-pensamiento.mp4" download>Descargar el video</a>.
           </video>
-          <div class="video-placeholder" id="videoPlaceholder" onclick="playVideo()">
+          <div class="video-placeholder" id="videoPlaceholder">
             <div class="play-btn"></div>
             <span class="video-placeholder-text">Reproducir Presentación</span>
           </div>
@@ -2356,29 +2356,13 @@
   /* ============================================
      VIDEO LOCAL
      ============================================ */
-  function playVideo() {
-    const video = document.getElementById('videoPlayer');
-    const placeholder = document.getElementById('videoPlaceholder');
-    if (!video) return;
-    video.controls = true;
-    placeholder.classList.add('is-hidden');
-    const playPromise = video.play();
-    if (playPromise && typeof playPromise.catch === 'function') {
-      playPromise.catch(() => { placeholder.classList.remove('is-hidden'); });
-    }
-  }
-
   (function attachVideoListeners() {
     const video = document.getElementById('videoPlayer');
     const placeholder = document.getElementById('videoPlaceholder');
     if (!video || !placeholder) return;
     video.addEventListener('play', () => placeholder.classList.add('is-hidden'));
-    video.addEventListener('pause', () => {
-      if (video.currentTime === 0) placeholder.classList.remove('is-hidden');
-    });
     video.addEventListener('ended', () => {
       placeholder.classList.remove('is-hidden');
-      video.controls = false;
       video.currentTime = 0;
     });
   })();
